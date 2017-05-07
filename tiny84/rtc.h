@@ -7,6 +7,7 @@
 
 #include "TinyWireM.h"
 
+#define onCompensation 7
 #define rtcAddress          0B1101000
 
 //#define rtcAlarm1           0x07

@@ -24,7 +24,7 @@ void rtcWriteByte(uint8_t regAddress, uint8_t data){
 }
 
 void rtcSetAlarm(uint8_t minutes){
-    rtcWriteByte(0x0,7);
+    rtcWriteByte(0x0,onCompensation);
     
     for (uint8_t i=1;i<0x8;i++){
         rtcWriteByte(i,0);

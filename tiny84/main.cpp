@@ -1,6 +1,6 @@
-#define timeLapseMinutes 1
+#define timeLapseMinutes 3
 
-#define errCount 5
+#define errCount 8
 #include <stdbool.h>
 #include <stdlib.h>
 #include <inttypes.h>
@@ -115,27 +115,30 @@ uint8_t cameraState(){
 }
 
 
+// delay 4500
 void turnCameraOff(){
 	powerPin.high();
-	_delay_ms(2500);
+	_delay_ms(4000);
 	powerPin.low();
-	//_delay_ms(500);
+	_delay_ms(500);
 }
 
+// delay 2250
 void turnOnCamera(){
 	powerPin.high();
-	_delay_ms(500);
+	_delay_ms(750);
 	powerPin.low();
 	_delay_ms(1500);
 }
 
+// delay 1500
 void modeButton(){
 	powerPin.high();
-	_delay_ms(500);
+	_delay_ms(750);
 	powerPin.low();
-	_delay_ms(500);
+	_delay_ms(750);
 }
-
+// delay1500
 void execButton(){
 	execPin.high();
 	_delay_ms(500);
@@ -171,7 +174,8 @@ int main()
     _delay_ms(3000);
     blink=0;
     modeButton();
-    _delay_ms(500);
+    
+    _delay_ms(250); //compensation for precise RTC
     rtcSetAlarm(timeLapseMinutes);    	
     while(1){
 		a=cameraState();
@@ -194,8 +198,9 @@ int main()
 			case stateFoto:
                 //dbg_putchar('f');
                 errCnt++;
+                _delay_ms(500);
                 execButton();
-                _delay_ms(2000);
+                _delay_ms(3500);
                 turnCameraOff();
                 //dbg_putchar('\n');
                 errCnt=9;
@@ -203,18 +208,22 @@ int main()
 			case stateMdVideo:
                 //dbg_putchar('V');                
                 modeButton();
+                errCnt++;
+                if (errCnt>=errCount) break;
 				break;
 			case stateMdFoto:
                 //dbg_putchar('F');
                 modeButton();
+                errCnt++;
+                if (errCnt>=errCount) break;
 				break;
 			case stateVideo:
                 //dbg_putchar('v');
-                while (isVideo()){
+                //while (isVideo()){
                     modeButton();
                     errCnt++;
                     if (errCnt>=errCount) break;
-                }
+                //}
                 break;
 			default:
                 //dbg_putchar('W');
